@@ -3,13 +3,12 @@
  */
 import express from 'express';
 import bodyParser from 'body-parser';
-import { Request, Response } from 'express-serve-static-core'
+import { StudentRestHandler } from './StudentRestHandler';
 
 /**
  * Internal Imports
  */
-import {studentList} from './StudentList';
-import {Student} from './Student';
+import { studentList } from './StudentList';
 
 debugger;
 
@@ -22,43 +21,19 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 const hostedOnPort = 8194;
+const studentHandler = new StudentRestHandler(studentList);
+
+/**
+ * TODO: turn / into a sort of health check page for monitoring
+ */
+// app.get('/', (req: Request, res: Response) => {
+//     res.send('Ok Plus!');
+// });
 
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Ok Plus!');
-});
-
-app.get('/student', (req: Request, res: Response) => {
-    const id: number = parseInt(req.query.id, 10);
-    if (!id) {
-        res.sendStatus(404);
-        return;
-    }
-    const index = studentList.findIndex((target) => {
-        if (target.getId() === id) {
-            return true;
-        }
-        return false;
-    });
-    if (index < 0) {
-        res.sendStatus(404);
-        return;
-    }
-
-    res.send(studentList[index]);
-});
-
-app.post('/student', (req: Request, res: Response) => {
-    const body = req.body;
-
-    if (!body) {
-        res.sendStatus(500);
-        return;
-    }
-
-    studentList.push(Student.Parse(body));
-    res.send('Created!');
-});
+app.get('/student', studentHandler.handleGet.bind(studentHandler));
+app.post('/student', studentHandler.handlePost.bind(studentHandler));
+app.delete('/student', studentHandler.handleDelete.bind(studentHandler));
 
 app.listen(hostedOnPort, () => {
     console.log(`Listening on port ${hostedOnPort}`);
