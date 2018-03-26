@@ -9,6 +9,7 @@ import { Request, Response } from 'express-serve-static-core'
  * Internal Imports
  */
 import {studentList} from './StudentList';
+import {Student} from './Student';
 
 debugger;
 
@@ -55,7 +56,7 @@ app.post('/student', (req: Request, res: Response) => {
         return;
     }
 
-    studentList.push(body);
+    studentList.push(Student.Parse(body));
     res.send('Created!');
 });
 
