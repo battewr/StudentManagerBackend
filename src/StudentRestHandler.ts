@@ -7,7 +7,6 @@ import { Request, Response } from 'express-serve-static-core'
  * Internal Imports
  */
 import { Student } from './Student';
-debugger;
 
 export class StudentRestHandler {
 

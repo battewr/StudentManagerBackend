@@ -10,8 +10,6 @@ import { StudentRestHandler } from './StudentRestHandler';
  */
 import { studentList } from './StudentList';
 
-debugger;
-
 const app = express();
 
 app.use(bodyParser.urlencoded({
