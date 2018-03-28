@@ -3,12 +3,14 @@
  */
 import express from 'express';
 import bodyParser from 'body-parser';
+import { Request, Response } from 'express-serve-static-core'
 import { StudentRestHandler } from './StudentRestHandler';
 
 /**
  * Internal Imports
  */
 import { studentList } from './StudentList';
+import { Health } from './Health';
 
 const app = express();
 
@@ -22,11 +24,11 @@ const hostedOnPort = 8194;
 const studentHandler = new StudentRestHandler(studentList);
 
 /**
- * TODO: turn / into a sort of health check page for monitoring
+ * General health... 
  */
-// app.get('/', (req: Request, res: Response) => {
-//     res.send('Ok Plus!');
-// });
+app.get('/', (req: Request, res: Response) => {
+    res.send(Health.getHealth());
+});
 
 
 app.get('/student', studentHandler.handleGet.bind(studentHandler));

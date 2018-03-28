@@ -4,6 +4,10 @@ export class Student {
     private _grade: string;
     private _profilePictureLink: string;
 
+    /**
+     * .ctor()
+     * @param inputObject 
+     */
     constructor(inputObject: any) {
         this._name = inputObject.Name;
         this._id = inputObject.Id;
