@@ -8,14 +8,28 @@ import { Request, Response } from 'express-serve-static-core'
  */
 import { Student } from './Student';
 
+/**
+ * 
+ */
 export class StudentRestHandler {
 
     private _studentList: Student[];
+   
+    /**
+     * .ctor
+     * @param studentList 
+     */
     constructor(studentList: Student[]) {
         this._studentList = studentList;
     }
 
-    public handleGet(request: Request, response: Response) {
+    /**
+     * 
+     * @param request 
+     * @param response
+     * @returns {void}
+     */
+    public handleGet(request: Request, response: Response): void{
         const id: number = this.getIdFromQueryString(request);
         if (id === -1) {
             response.sendStatus(404);
@@ -31,7 +45,13 @@ export class StudentRestHandler {
         response.send(this._studentList[index]);
     }
 
-    public handlePost(request: Request, response: Response) {
+    /**
+     * 
+     * @param request 
+     * @param response
+     * @returns {void}
+     */
+    public handlePost(request: Request, response: Response): void {
         const body = request.body;
 
         if (!body) {
@@ -43,7 +63,13 @@ export class StudentRestHandler {
         response.send('Created!');
     }
 
-    public handleDelete(request: Request, response: Response) {
+    /**
+     * 
+     * @param request 
+     * @param response
+     * @returns {void}
+     */
+    public handleDelete(request: Request, response: Response): void {
         const id: number = this.getIdFromQueryString(request);
         if (id === -1) {
             response.sendStatus(404);
@@ -60,6 +86,10 @@ export class StudentRestHandler {
         response.send('Removed');
     }
 
+    /**
+     * 
+     * @param id 
+     */
     private getStudentIndex(id: number): number {
         return this._studentList.findIndex((target) => {
             if (target.getId() === id) {
@@ -69,6 +99,10 @@ export class StudentRestHandler {
         });
     }
 
+    /**
+     * 
+     * @param request 
+     */
     private getIdFromQueryString(request: Request): number {
         const id = request.query.Id;
         if (!id) {

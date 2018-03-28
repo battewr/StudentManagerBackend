@@ -11,6 +11,11 @@ export class Student {
         this._profilePictureLink = inputObject.ProfilePicture;
     }
 
+    /**
+     * 
+     * @param inputObject 
+     * @returns {Student}
+     */
     public static Parse(inputObject: any): Student {
         if (!this._validate(inputObject) ) {
             throw 'Invalid input object missing properties!';
@@ -18,6 +23,9 @@ export class Student {
         return new Student(inputObject);
     }
 
+    /**
+     * @returns {number}
+     */
     public getId(): number {
         return this._id;
     }
@@ -25,7 +33,7 @@ export class Student {
     /**
      * 
      * @param input input from rest engine?
-     * @returns true if the object is valid to create a student!
+     * @returns {boolean} true if the object is valid to create a student!
      */
     private static _validate(input: any): boolean {
         if (input.hasOwnProperty('Name') &&
