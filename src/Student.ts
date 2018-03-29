@@ -1,6 +1,6 @@
 export class Student {
     private _name: string;
-    private _id: number;
+    private _id: string;
     private _grade: string;
     private _profilePictureLink: string;
 
@@ -28,9 +28,9 @@ export class Student {
     }
 
     /**
-     * @returns {number}
+     * @returns {string}
      */
-    public getId(): number {
+    public getId(): string {
         return this._id;
     }
 

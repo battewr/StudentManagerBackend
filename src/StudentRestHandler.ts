@@ -30,8 +30,8 @@ export class StudentRestHandler {
      * @returns {void}
      */
     public handleGet(request: Request, response: Response): void{
-        const id: number = this.getIdFromQueryString(request);
-        if (id === -1) {
+        const id: string = this.getIdFromQueryString(request);
+        if (!id || id === null) {
             response.sendStatus(404);
             return;
         }
@@ -70,8 +70,8 @@ export class StudentRestHandler {
      * @returns {void}
      */
     public handleDelete(request: Request, response: Response): void {
-        const id: number = this.getIdFromQueryString(request);
-        if (id === -1) {
+        const id: string = this.getIdFromQueryString(request);
+        if (!id || id === null) {
             response.sendStatus(404);
             return;
         }
@@ -90,7 +90,7 @@ export class StudentRestHandler {
      * 
      * @param id 
      */
-    private getStudentIndex(id: number): number {
+    private getStudentIndex(id: string): number {
         return this._studentList.findIndex((target) => {
             if (target.getId() === id) {
                 return true;
@@ -103,16 +103,12 @@ export class StudentRestHandler {
      * 
      * @param request 
      */
-    private getIdFromQueryString(request: Request): number {
+    private getIdFromQueryString(request: Request): string {
         const id = request.query.Id;
         if (!id) {
-            return -1;
+            return null;
         }
 
-        try {
-            return parseInt(id, 10);
-        } catch {
-            return -1;
-        }
+        return id;
     }
 }

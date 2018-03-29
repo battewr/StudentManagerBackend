@@ -18,6 +18,12 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use((request: Request, response: Response, next: any) => {
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 app.use(bodyParser.json());
 
 const hostedOnPort = 8194;
