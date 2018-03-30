@@ -23,6 +23,10 @@ export class StudentRestHandler {
         this._studentList = studentList;
     }
 
+    public handleGetList(request: Request, response: Response): void {
+        response.send(this._studentList);
+    }
+
     /**
      * 
      * @param request 
