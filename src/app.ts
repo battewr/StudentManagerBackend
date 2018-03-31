@@ -40,6 +40,7 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/student', studentHandler.handleGet.bind(studentHandler));
 app.get('/students', studentHandler.handleGetList.bind(studentHandler));
 app.post('/student', studentHandler.handlePost.bind(studentHandler));
+app.put('/student', studentHandler.handlePut.bind(studentHandler));
 app.delete('/student', studentHandler.handleDelete.bind(studentHandler));
 
 app.listen(hostedOnPort, () => {

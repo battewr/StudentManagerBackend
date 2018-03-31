@@ -13,6 +13,9 @@ import { Student } from './Student';
  */
 export class StudentRestHandler {
 
+    /**
+     * TODO: refactor out into a database... persist
+     */
     private _studentList: Student[];
    
     /**
@@ -59,12 +62,41 @@ export class StudentRestHandler {
         const body = request.body;
 
         if (!body) {
-            response.sendStatus(500);
+            response.sendStatus(400);
             return;
         }
 
         this._studentList.push(Student.Parse(body));
         response.send('Created!');
+    }
+
+    public handlePut(request: Request, response: Response): void {
+        const id: string = this.getIdFromQueryString(request);
+        if (!id || id === null) {
+            response.sendStatus(400);
+            return;
+        }
+
+        const index = this.getStudentIndex(id);
+        if (index < 0) {
+            response.sendStatus(404);
+            return;
+        }
+
+        const body = request.body;
+
+        if (!body) {
+            response.sendStatus(400);
+            return;
+        }
+
+        const targetStudentChanges = Student.Parse(body);
+        if (targetStudentChanges.getId() !== id) {
+            response.sendStatus(400);
+            return;
+        }
+        this._studentList[index] = targetStudentChanges;
+        response.send('Updated!');
     }
 
     /**
