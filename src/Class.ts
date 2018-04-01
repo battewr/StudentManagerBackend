@@ -1,18 +1,45 @@
+import { Student } from "./Student";
+
 export class Class {
     private _id: string;
     private _name: string;
     private _semester: string;
     private _year: string;
 
+    private _studentList: Student[]
+
     constructor(inputObject: any) {
         this._id = inputObject.Id;
         this._name = inputObject.Name;
         this._semester = inputObject.Semester;
         this._year = inputObject.Year;
+
+        this._studentList = [];
     }
 
     public getId() {
         return this._id;
+    }
+
+    public getAttendenceList(): Student[] {
+        return this._studentList;
+    }
+
+    public removeStudentFromAttendence(student: Student) {
+        const index = this._studentList.indexOf(student);
+        if (index < 0) {
+            throw 'Student target not found!';
+        }
+
+        this._studentList.splice(index, 1);
+    }
+
+    public removeStudentFromAttendenceAtIndex(studentIndex: number) {
+        this._studentList.splice(studentIndex, 1);
+    }
+
+    public assignStudentToClass(student: Student) {
+        this._studentList.push(student);
     }
     
     /**
