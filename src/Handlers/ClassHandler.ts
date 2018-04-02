@@ -1,8 +1,8 @@
 /**
  * Third Party Library Imports
  */
-import { Request, Response } from 'express-serve-static-core'
-import { Class } from '../Class';
+import { Request, Response } from "express-serve-static-core";
+import { Class } from "../Class";
 
 export class ClassHandler {
     private _mockClassData: Class[];
@@ -35,7 +35,7 @@ export class ClassHandler {
         }
 
         this._mockClassData.push(Class.Parse(body));
-        response.send('Created!');
+        response.send("Created!");
     }
 
     public handlePut(request: Request, response: Response): void {
@@ -53,9 +53,9 @@ export class ClassHandler {
             return;
         }
 
-        /** 
+        /**
          * load the body... the new student details being used to replace
-         * the student info needs to exist and be valid JSON* 
+         * the student info needs to exist and be valid JSON*
          */
         const body = request.body;
         if (!body) {
@@ -74,7 +74,7 @@ export class ClassHandler {
         this._mockClassData[index] = targetClassChanges;
 
         /** response to the request */
-        response.send('Updated!');
+        response.send("Updated!");
     }
 
     public handleDelete(request: Request, response: Response) {
@@ -91,13 +91,13 @@ export class ClassHandler {
         }
 
         this._mockClassData.splice(index, 1);
-        response.send('Removed');
+        response.send("Removed");
     }
-    
+
     /**
-    * 
-    * @param id 
-    */
+     *
+     * @param id
+     */
    private getClassIndex(id: string): number {
        return this._mockClassData.findIndex((target) => {
            if (target.getId() === id) {
@@ -108,8 +108,8 @@ export class ClassHandler {
    }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      */
     private getIdFromQueryString(request: Request): string {
         const id = request.query.Id;

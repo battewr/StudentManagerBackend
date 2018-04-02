@@ -1,15 +1,15 @@
 /**
  * Third Party Library Imports
  */
-import { Request, Response } from 'express-serve-static-core'
+import { Request, Response } from "express-serve-static-core";
 
 /**
  * Internal Imports
  */
-import { Student } from '../Student';
+import { Student } from "../Student";
 
 /**
- * 
+ *
  */
 export class StudentHandler {
 
@@ -17,10 +17,10 @@ export class StudentHandler {
      * TODO: refactor out into a database... persist
      */
     private _mockStudentData: Student[];
-   
+
     /**
      * .ctor
-     * @param studentSeedData 
+     * @param studentSeedData
      */
     constructor(studentSeedData: Student[]) {
         this._mockStudentData = studentSeedData;
@@ -31,12 +31,12 @@ export class StudentHandler {
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      * @param response
      * @returns {void}
      */
-    public handleGet(request: Request, response: Response): void{
+    public handleGet(request: Request, response: Response): void {
         const id: string = this.getIdFromQueryString(request);
         if (!id || id === null) {
             response.sendStatus(404);
@@ -53,8 +53,8 @@ export class StudentHandler {
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      * @param response
      * @returns {void}
      */
@@ -67,7 +67,7 @@ export class StudentHandler {
         }
 
         this._mockStudentData.push(Student.Parse(body));
-        response.send('Created!');
+        response.send("Created!");
     }
 
     public handlePut(request: Request, response: Response): void {
@@ -85,9 +85,9 @@ export class StudentHandler {
             return;
         }
 
-        /** 
+        /**
          * load the body... the new student details being used to replace
-         * the student info needs to exist and be valid JSON* 
+         * the student info needs to exist and be valid JSON*
          */
         const body = request.body;
         if (!body) {
@@ -106,12 +106,12 @@ export class StudentHandler {
         this._mockStudentData[index] = targetStudentChanges;
 
         /** response to the request */
-        response.send('Updated!');
+        response.send("Updated!");
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      * @param response
      * @returns {void}
      */
@@ -129,12 +129,12 @@ export class StudentHandler {
         }
 
         this._mockStudentData.splice(index, 1);
-        response.send('Removed');
+        response.send("Removed");
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      */
     private getStudentIndex(id: string): number {
         return this._mockStudentData.findIndex((target) => {
@@ -146,8 +146,8 @@ export class StudentHandler {
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      */
     private getIdFromQueryString(request: Request): string {
         const id = request.query.Id;

@@ -6,7 +6,7 @@ export class Class {
     private _semester: string;
     private _year: string;
 
-    private _studentList: Student[]
+    private _studentList: Student[];
 
     constructor(inputObject: any) {
         this._id = inputObject.Id;
@@ -28,7 +28,7 @@ export class Class {
     public removeStudentFromAttendence(student: Student) {
         const index = this._studentList.indexOf(student);
         if (index < 0) {
-            throw 'Student target not found!';
+            throw "Student target not found!";
         }
 
         this._studentList.splice(index, 1);
@@ -41,28 +41,28 @@ export class Class {
     public assignStudentToClass(student: Student) {
         this._studentList.push(student);
     }
-    
+
     /**
-     * 
-     * @param inputObject 
+     *
+     * @param inputObject
      * @returns {Student}
      */
     public static Parse(inputObject: any): Class {
         if (!this._validate(inputObject) ) {
-            throw 'Invalid input object missing properties!';
+            throw "Invalid input object missing properties!";
         }
         return new Class(inputObject);
     }
     /**
-     * 
+     *
      * @param input input from rest engine?
      * @returns {boolean} true if the object is valid to create a student!
      */
     private static _validate(input: any): boolean {
-        if (input.hasOwnProperty('Name') &&
-            input.hasOwnProperty('Id') &&
-            input.hasOwnProperty('Semester') &&
-            input.hasOwnProperty('Year')) {
+        if (input.hasOwnProperty("Name") &&
+            input.hasOwnProperty("Id") &&
+            input.hasOwnProperty("Semester") &&
+            input.hasOwnProperty("Year")) {
             return true;
         }
         return false;

@@ -6,7 +6,7 @@ export class Student {
 
     /**
      * .ctor()
-     * @param inputObject 
+     * @param inputObject
      */
     constructor(inputObject: any) {
         this._name = inputObject.Name;
@@ -16,13 +16,13 @@ export class Student {
     }
 
     /**
-     * 
-     * @param inputObject 
+     *
+     * @param inputObject
      * @returns {Student}
      */
     public static Parse(inputObject: any): Student {
         if (!this._validate(inputObject) ) {
-            throw 'Invalid input object missing properties!';
+            throw "Invalid input object missing properties!";
         }
         return new Student(inputObject);
     }
@@ -35,15 +35,15 @@ export class Student {
     }
 
     /**
-     * 
+     *
      * @param input input from rest engine?
      * @returns {boolean} true if the object is valid to create a student!
      */
     private static _validate(input: any): boolean {
-        if (input.hasOwnProperty('Name') &&
-            input.hasOwnProperty('Id') &&
-            input.hasOwnProperty('Grade') &&
-            input.hasOwnProperty('ProfilePicture')) {
+        if (input.hasOwnProperty("Name") &&
+            input.hasOwnProperty("Id") &&
+            input.hasOwnProperty("Grade") &&
+            input.hasOwnProperty("ProfilePicture")) {
             return true;
         }
         return false;

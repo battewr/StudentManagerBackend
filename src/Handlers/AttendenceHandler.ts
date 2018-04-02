@@ -1,9 +1,9 @@
 /**
  * Third Party Library Imports
  */
-import { Request, Response } from 'express-serve-static-core'
-import { Class } from '../Class';
-import { Student } from '../Student';
+import { Request, Response } from "express-serve-static-core";
+import { Class } from "../Class";
+import { Student } from "../Student";
 
 export class AttendenceHandler {
     private _mockClassData: Class[];
@@ -16,8 +16,8 @@ export class AttendenceHandler {
 
     /**
      * add an attendee to a class
-     * @param request 
-     * @param response 
+     * @param request
+     * @param response
      */
     public handlePut(request: Request, response: Response): void {
         /** parse the id from the url query string */
@@ -54,7 +54,7 @@ export class AttendenceHandler {
         targetClass.assignStudentToClass(targetStudent);
 
         /** response to the request */
-        response.send('Updated!');
+        response.send("Updated!");
     }
 
     public handleDelete(request: Request, response: Response) {
@@ -88,7 +88,7 @@ export class AttendenceHandler {
         }
         const targetStudent = this._mockStudentData[studentIndex];
 
-        const attendenceIndex = targetClass.getAttendenceList().indexOf(targetStudent)
+        const attendenceIndex = targetClass.getAttendenceList().indexOf(targetStudent);
 
         if (attendenceIndex < 0) {
             response.sendStatus(404);
@@ -97,13 +97,13 @@ export class AttendenceHandler {
 
         targetClass.removeStudentFromAttendenceAtIndex(attendenceIndex);
 
-        response.send('Removed');
+        response.send("Removed");
     }
 
     /**
-    * 
-    * @param id 
-    */
+     *
+     * @param id
+     */
     private getClassIndex(id: string): number {
         return this._mockClassData.findIndex((target) => {
             if (target.getId() === id) {
@@ -114,9 +114,9 @@ export class AttendenceHandler {
     }
 
     /**
-    * 
-    * @param id 
-    */
+     *
+     * @param id
+     */
     private getStudentIndex(id: string): number {
         return this._mockStudentData.findIndex((target) => {
             if (target.getId() === id) {
@@ -127,8 +127,8 @@ export class AttendenceHandler {
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      */
     private getIdFromQueryString(request: Request): string {
         const id = request.query.Id;
@@ -140,8 +140,8 @@ export class AttendenceHandler {
     }
 
     /**
-     * 
-     * @param request 
+     *
+     * @param request
      */
     private getStudentIdFromQueryString(request: Request): string {
         const id = request.query.StudentId;
