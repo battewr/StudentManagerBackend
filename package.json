@@ -4,7 +4,8 @@
   "description": "Backend Service for the StudentManager application suite",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "build.cmd"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
     "@types/express": "^4.11.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
+    "ts-lint": "^4.5.1",
     "typescript": "^2.7.2"
   }
 }
