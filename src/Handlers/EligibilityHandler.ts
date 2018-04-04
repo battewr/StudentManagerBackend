@@ -39,14 +39,29 @@ export class EligibilityHanlder {
         const completeEligibilityList = this.getAllEligibleStudents(targetClass.getEligibilityGrade());
         const attendenceListHash = targetClass.getAttendenceListHash();
 
-        const availableAttenenceList: Student[] = [];
+        let availableAttenenceList: Student[] = [];
 
         completeEligibilityList.forEach((student: Student) => {
             if (attendenceListHash.hasOwnProperty(student.getId())) { return; }
             availableAttenenceList.push(student);
         });
 
-        response.send(availableAttenenceList);
+        availableAttenenceList.sort((a: Student, b: Student): number => {
+            return a.getName().localeCompare(b.getName());
+        });
+
+        const estimatedSize = availableAttenenceList.length;
+
+        const takeCount = this.getTakeCount(request);
+        const skipCount = this.getSkipCount(request);
+        if (takeCount > 0 && skipCount > -1) {
+            const startIndex = skipCount;
+            const endIndex = startIndex + takeCount;
+
+            availableAttenenceList = availableAttenenceList.slice(startIndex, endIndex);
+        }
+
+        response.send({availableAttenenceList, estimatedSize});
     }
 
     private getAllEligibleStudents(eligiblityGrade: string) {
@@ -70,16 +85,31 @@ export class EligibilityHanlder {
     }
 
     /**
-     *
+     * 0: url?id=classId&skip=0&take=pageSize
+     * 1: skip=pageSize&take=pageSize
+     * 2: skip=pageSize*2&take=pageSize
      * @param id
      */
-    private getStudentIndex(id: string): number {
-        return this._mockStudentData.findIndex((target) => {
-            if (target.getId() === id) {
-                return true;
-            }
-            return false;
-        });
+    private getSkipCount(request: Request): number {
+        const skipCount = request.query.skip;
+        if (!skipCount) {
+            return -1;
+        }
+        return parseInt(skipCount, 10);
+    }
+
+    /**
+     * 0: url?id=classId&skip=0&take=pageSize
+     * 1: skip=pageSize&take=pageSize
+     * 2: skip=pageSize*2&take=pageSize
+     * @param id
+     */
+    private getTakeCount(request: Request): number {
+        const takeCount = request.query.take;
+        if (!takeCount) {
+            return -1;
+        }
+        return parseInt(takeCount, 10);
     }
 
     /**
@@ -88,19 +118,6 @@ export class EligibilityHanlder {
      */
     private getIdFromQueryString(request: Request): string {
         const id = request.query.Id;
-        if (!id) {
-            return null;
-        }
-
-        return id;
-    }
-
-    /**
-     *
-     * @param request
-     */
-    private getStudentIdFromQueryString(request: Request): string {
-        const id = request.query.StudentId;
         if (!id) {
             return null;
         }
