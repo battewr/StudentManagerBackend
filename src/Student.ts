@@ -34,6 +34,10 @@ export class Student {
         return this._id;
     }
 
+    public getGrade(): string {
+        return this._grade;
+    }
+
     /**
      *
      * @param input input from rest engine?

@@ -11,7 +11,7 @@ echo ts-lint completed successfully
 echo --
 
 echo ----------
-echo Running webpack task....
+echo Running typescript task....
 echo ----------
 call node_modules/.bin/tsc
 if errorlevel 1 goto FAIL

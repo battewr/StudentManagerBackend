@@ -3,6 +3,7 @@ import { Student } from "./Student";
 export class Class {
     private _id: string;
     private _name: string;
+    private _eligibleToGrade: string;
     private _semester: string;
     private _year: string;
 
@@ -13,6 +14,7 @@ export class Class {
         this._name = inputObject.Name;
         this._semester = inputObject.Semester;
         this._year = inputObject.Year;
+        this._eligibleToGrade = inputObject.EligibleToGrade;
 
         this._studentList = [];
     }
@@ -21,8 +23,24 @@ export class Class {
         return this._id;
     }
 
+    public getEligibilityGrade() {
+        return this._eligibleToGrade;
+    }
+
     public getAttendenceList(): Student[] {
         return this._studentList;
+    }
+
+    public getAttendenceListHash(): Object {
+        const returnStudentHash: any = {};
+        this._studentList.forEach((student: Student) => {
+            if (!!returnStudentHash.hasOwnProperty(student.getId())) {
+                console.error("Invalid state; duplicate primary keys found!");
+                return;
+            }
+            returnStudentHash[student.getId()] = student;
+        });
+        return returnStudentHash;
     }
 
     public removeStudentFromAttendence(student: Student) {
@@ -62,7 +80,8 @@ export class Class {
         if (input.hasOwnProperty("Name") &&
             input.hasOwnProperty("Id") &&
             input.hasOwnProperty("Semester") &&
-            input.hasOwnProperty("Year")) {
+            input.hasOwnProperty("Year") &&
+            input.hasOwnProperty("EligibleToGrade")) {
             return true;
         }
         return false;

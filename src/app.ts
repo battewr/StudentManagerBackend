@@ -15,6 +15,7 @@ import { MapSeedClassroomAssignments } from "./AttendenceList";
 import { Health } from "./Health";
 import { ClassHandler } from "./Handlers/ClassHandler";
 import { AttendenceHandler } from "./Handlers/AttendenceHandler";
+import { EligibilityHanlder } from "./Handlers/EligibilityHandler";
 
 const app = express();
 
@@ -39,6 +40,7 @@ MapSeedClassroomAssignments(classes, students);
 const studentHandler = new StudentHandler(students);
 const classHanlder = new ClassHandler(classes);
 const attendenceHandler = new AttendenceHandler(classes, students);
+const eligibility = new EligibilityHanlder(classes, students);
 
 /**
  * General health...
@@ -73,6 +75,8 @@ app.delete("/class", classHanlder.handleDelete.bind(classHanlder));
  */
 app.put("/attendence", attendenceHandler.handlePut.bind(attendenceHandler));
 app.delete("/attendence", attendenceHandler.handleDelete.bind(attendenceHandler));
+
+app.get("/eligibility", eligibility.handleGet.bind(eligibility));
 
 app.listen(hostedOnPort, () => {
     console.log(`Listening on port ${hostedOnPort}`);
