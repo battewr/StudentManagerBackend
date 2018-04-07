@@ -37,7 +37,7 @@ const hostedOnPort = 8194;
 const students = studentList;
 const classes = classList;
 MapSeedClassroomAssignments(classes, students);
-const studentHandler = new StudentHandler(students);
+const studentHandler = new StudentHandler(students, classes);
 const classHanlder = new ClassHandler(classes);
 const attendenceHandler = new AttendenceHandler(classes, students);
 const eligibility = new EligibilityHanlder(classes, students);
