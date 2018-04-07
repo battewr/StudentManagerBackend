@@ -7,6 +7,7 @@ import { Request, Response } from "express-serve-static-core";
  * Internal Imports
  */
 import { Student } from "../Student";
+import { Class } from "../Class";
 
 /**
  *
@@ -17,13 +18,15 @@ export class StudentHandler {
      * TODO: refactor out into a database... persist
      */
     private _mockStudentData: Student[];
+    private _mockClassData: Class[];
 
     /**
      * .ctor
      * @param studentSeedData
      */
-    constructor(studentSeedData: Student[]) {
+    constructor(studentSeedData: Student[], classSeedData: Class[]) {
         this._mockStudentData = studentSeedData;
+        this._mockClassData = classSeedData;
     }
 
     public handleGetList(request: Request, response: Response): void {
@@ -129,6 +132,14 @@ export class StudentHandler {
         }
 
         this._mockStudentData.splice(index, 1);
+
+        this._mockClassData.forEach((classEntry: Class) => {
+            const attendenceIndex = classEntry.getAttendenceList().findIndex((student: Student) => {
+                return student.getId() === id;
+            });
+            classEntry.removeStudentFromAttendenceAtIndex(attendenceIndex);
+        });
+
         response.send("Removed");
     }
 
