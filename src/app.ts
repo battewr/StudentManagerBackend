@@ -11,11 +11,16 @@ import { StudentHandler } from "./Handlers/StudentHandler";
  */
 import { studentList } from "./StudentList";
 import { classList } from "./ClassList";
-import { MapSeedClassroomAssignments } from "./AttendenceList";
+import { guardianList } from "./GuardianList";
+
+import { MapSeedClassroomAssignments, MapSeedGuardianAssignments } from "./JoinTableSeeder";
+
 import { Health } from "./Health";
 import { ClassHandler } from "./Handlers/ClassHandler";
 import { AttendenceHandler } from "./Handlers/AttendenceHandler";
 import { EligibilityHanlder } from "./Handlers/EligibilityHandler";
+import { GuardianHandler } from "./Handlers/GuardianHandler";
+import { AssignHandler } from "./Handlers/AssignHandler";
 
 const app = express();
 
@@ -36,10 +41,15 @@ const hostedOnPort = 8194;
 
 const students = studentList;
 const classes = classList;
+
 MapSeedClassroomAssignments(classes, students);
+MapSeedGuardianAssignments(guardianList, studentList);
+
 const studentHandler = new StudentHandler(students, classes);
 const classHanlder = new ClassHandler(classes);
+const guardianHandler = new GuardianHandler(guardianList);
 const attendenceHandler = new AttendenceHandler(classes, students);
+const assignHandler = new AssignHandler(guardianList, studentList);
 const eligibility = new EligibilityHanlder(classes, students);
 
 /**
@@ -71,12 +81,26 @@ app.put("/class", classHanlder.handlePut.bind(classHanlder));
 app.delete("/class", classHanlder.handleDelete.bind(classHanlder));
 
 /**
- * attendence (put, delete)
+ * attendence class to student association (put, delete)
  */
 app.put("/attendence", attendenceHandler.handlePut.bind(attendenceHandler));
 app.delete("/attendence", attendenceHandler.handleDelete.bind(attendenceHandler));
 
 app.get("/eligibility", eligibility.handleGet.bind(eligibility));
+
+/**
+ * Guardians (GET,)
+ */
+app.get("/guardian", guardianHandler.handleGet.bind(guardianHandler));
+app.post("/guardian", guardianHandler.handlePost.bind(guardianHandler));
+app.put("/guardian", guardianHandler.handlePut.bind(guardianHandler));
+app.delete("/guardian", guardianHandler.handleDelete.bind(guardianHandler));
+
+/**
+ * Guardian to Child Assignment
+ */
+app.put("/assign", assignHandler.handlePut.bind(assignHandler));
+app.delete("/assign", assignHandler.handleDelete.bind(assignHandler));
 
 app.listen(hostedOnPort, () => {
     console.log(`Listening on port ${hostedOnPort}`);
