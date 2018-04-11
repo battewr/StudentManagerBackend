@@ -2,6 +2,9 @@
  * Third Party Library Imports
  */
 import express from "express";
+import https from "https";
+import http from "http";
+import fs from "fs";
 import bodyParser from "body-parser";
 import { Request, Response } from "express-serve-static-core";
 import { StudentHandler } from "./Handlers/StudentHandler";
@@ -21,6 +24,10 @@ import { AttendenceHandler } from "./Handlers/AttendenceHandler";
 import { EligibilityHanlder } from "./Handlers/EligibilityHandler";
 import { GuardianHandler } from "./Handlers/GuardianHandler";
 import { AssignHandler } from "./Handlers/AssignHandler";
+import { LoginHandler } from "./Handlers/LoginHandler";
+
+// var https = require('https');
+
 
 const app = express();
 
@@ -51,6 +58,7 @@ const guardianHandler = new GuardianHandler(guardianList);
 const attendenceHandler = new AttendenceHandler(classes, students);
 const assignHandler = new AssignHandler(guardianList, studentList);
 const eligibility = new EligibilityHanlder(classes, students);
+const loginHandler = new LoginHandler();
 
 /**
  * General health...
@@ -102,6 +110,21 @@ app.delete("/guardian", guardianHandler.handleDelete.bind(guardianHandler));
 app.put("/assign", assignHandler.handlePut.bind(assignHandler));
 app.delete("/assign", assignHandler.handleDelete.bind(assignHandler));
 
-app.listen(hostedOnPort, () => {
-    console.log(`Listening on port ${hostedOnPort}`);
+app.post("/login", loginHandler.handlePost.bind(loginHandler));
+app.post("/registerGuardian", loginHandler.handleRegisterGuardian.bind(loginHandler));
+
+const privateKey = fs.readFileSync("selfcert/private.pem", "utf8");
+const certificate = fs.readFileSync("selfcert/public.pem", "utf8");
+
+console.log("Certs Loaded... spawning server");
+const credentials = { key: privateKey, cert: certificate };
+const httpsServer = https.createServer(credentials, app);
+const httpServer = http.createServer(app);
+
+httpsServer.listen(hostedOnPort, () => {
+    console.log(`Listening on SSL port ${hostedOnPort}`);
+});
+
+httpServer.listen(hostedOnPort - 1, () => {
+    console.log(`Listening on port ${hostedOnPort - 1}`);
 });
