@@ -1,32 +1,22 @@
 import crypto from "crypto";
 import uuid from "uuid";
 import { Request, Response } from "express-serve-static-core";
-
-export enum UserType {
-    Student,
-    Teacher,
-    Guardian,
-    SchoolAdmin
-}
-
-export interface IRegisteredUsers {
-    userType: UserType;
-    userName: string;
-    passwordHash: string;
-    passwordNounce: string;
-};
+import { IRegisteredUsers, UserType } from "../Security/SecurityBaseTypes";
+import { Dictionary } from "../Shared/Dictionary";
+import { TokenManager } from "../Security/TokenManager";
 
 interface IRawLoginInputBody {
     userName: string;
     password: string;
 }
 
-interface Map<T> {
-    [key: string]: T;
-}
-
 export class LoginHandler {
-    private _registeredUsers: Map<IRegisteredUsers> = {};
+    private _registeredUsers: Dictionary<IRegisteredUsers> = {};
+    private _tokenManager: TokenManager;
+
+    constructor(tokenManager: TokenManager) {
+        this._tokenManager = tokenManager;
+    }
 
     public handleRegisterGuardian(request: Request, response: Response) {
         const body = request.body;
@@ -50,7 +40,7 @@ export class LoginHandler {
             userType: UserType.Guardian,
         };
         this._registeredUsers[rawObject.userName] = newUserObject;
-        response.send({result: "Ok!"});
+        response.send({ result: "Ok!" });
     }
 
     public handlePost(request: Request, response: Response) {
@@ -68,7 +58,11 @@ export class LoginHandler {
         const hash = this.hashUserPassword(request.body, targetUser.passwordNounce);
 
         if (hash === targetUser.passwordHash) {
-            response.sendStatus(200);
+            const candidateToken = this._tokenManager.issueToken(targetUser);
+            response.send({
+                token: candidateToken.token,
+                expires: candidateToken.expiresAt,
+            });
         } else {
             response.sendStatus(401);
         }

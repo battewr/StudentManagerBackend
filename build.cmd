@@ -10,6 +10,13 @@ echo --
 echo ts-lint completed successfully
 echo --
 
+call node_modules/.bin/tslint -r ts-node/register tests/**/*.spec.ts
+if errorlevel 1 goto FAIL
+
+echo --
+echo mocha completed successfully
+echo --
+
 echo ----------
 echo Running typescript task....
 echo ----------

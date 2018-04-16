@@ -25,9 +25,7 @@ import { EligibilityHanlder } from "./Handlers/EligibilityHandler";
 import { GuardianHandler } from "./Handlers/GuardianHandler";
 import { AssignHandler } from "./Handlers/AssignHandler";
 import { LoginHandler } from "./Handlers/LoginHandler";
-
-// var https = require('https');
-
+import { TokenManager } from "./Security/TokenManager";
 
 const app = express();
 
@@ -37,12 +35,37 @@ app.use(bodyParser.urlencoded({
 
 app.use((request: Request, response: Response, next: any) => {
     response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, sm-authorization-header");
     response.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
     next();
 });
 
 app.use(bodyParser.json());
+
+app.use((request: Request, response: Response, next: any) => {
+    if (request.method.toLocaleLowerCase() === "options") {
+        next();
+        return;
+    }
+
+    if (request.path !== "/" &&
+        request.path !== "/login" &&
+        request.path !== "/registerGuardian") {
+        if (!request.headers.hasOwnProperty("sm-authorization-header")) {
+            response.sendStatus(401);
+            return;
+        }
+
+        const headerValue = request.headers["sm-authorization-header"];
+        if (!tokenManager.isValidToken(headerValue as string)) {
+            response.sendStatus(401);
+            return;
+        }
+
+        tokenManager.refreshToken(headerValue as string);
+    }
+    next();
+});
 
 const hostedOnPort = 8194;
 
@@ -58,7 +81,10 @@ const guardianHandler = new GuardianHandler(guardianList);
 const attendenceHandler = new AttendenceHandler(classes, students);
 const assignHandler = new AssignHandler(guardianList, studentList);
 const eligibility = new EligibilityHanlder(classes, students);
-const loginHandler = new LoginHandler();
+
+
+const tokenManager = new TokenManager();
+const loginHandler = new LoginHandler(tokenManager);
 
 /**
  * General health...
@@ -66,6 +92,9 @@ const loginHandler = new LoginHandler();
 app.get("/", (req: Request, res: Response) => {
     res.send(Health.getHealth());
 });
+
+app.post("/login", loginHandler.handlePost.bind(loginHandler));
+app.post("/registerGuardian", loginHandler.handleRegisterGuardian.bind(loginHandler));
 
 /**
  * Student(s) (GET)
@@ -109,9 +138,6 @@ app.delete("/guardian", guardianHandler.handleDelete.bind(guardianHandler));
  */
 app.put("/assign", assignHandler.handlePut.bind(assignHandler));
 app.delete("/assign", assignHandler.handleDelete.bind(assignHandler));
-
-app.post("/login", loginHandler.handlePost.bind(loginHandler));
-app.post("/registerGuardian", loginHandler.handleRegisterGuardian.bind(loginHandler));
 
 const privateKey = fs.readFileSync("selfcert/private.pem", "utf8");
 const certificate = fs.readFileSync("selfcert/public.pem", "utf8");
