@@ -95,6 +95,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/login", loginHandler.handlePost.bind(loginHandler));
 app.post("/registerGuardian", loginHandler.handleRegisterGuardian.bind(loginHandler));
+app.get("/sc", loginHandler.handleGetSecurityContext.bind(loginHandler));
 
 /**
  * Student(s) (GET)
