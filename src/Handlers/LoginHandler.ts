@@ -18,6 +18,10 @@ export class LoginHandler {
         this._tokenManager = tokenManager;
     }
 
+    public handleGetSecurityContext(request: Request, response: Response): void {
+        response.sendStatus(200);
+    }
+
     public handleRegisterGuardian(request: Request, response: Response) {
         const body = request.body;
 
